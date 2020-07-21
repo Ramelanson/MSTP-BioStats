@@ -29,4 +29,21 @@ polls_filtered <- polls %>%
 summary(polls_filtered)
 table(polls_filtered$winner) #there are 1429 house candidates and 435 winners
 
-# 
+# Remove NA from district
+
+polls_filtered <- polls_filtered %>% filter(!is.na(district))
+
+
+# Create df of winners and losers
+
+winners <- polls_filtered %>%
+  filter(winner == 'Y') %>%
+  mutate(district_state = paste(district, state, sep =' '))
+
+losers <- polls_filtered %>%
+  mutate(win = is.na(winner)) %>%
+  select(-winner) %>%
+  filter(win == TRUE) %>%
+  mutate(winner = 'N') %>%
+  select(-win) %>%
+  mutate(district_state = paste(district, state, sep =' '))
